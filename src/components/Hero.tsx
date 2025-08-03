@@ -1,14 +1,13 @@
 // src/components/Hero.jsx
 // This version correctly places the main title in the bottom-right corner.
-import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants  } from 'framer-motion';
 
 function Hero() {
   // Define a constant for the accent color to easily manage the theme.
   const accentColor = '#3abf00'; // The bright green accent color.
 
   // Define animation variants for the top-left text block.
-  const topLeftVariants = {
+  const topLeftVariants: Variants = {
     hidden: { opacity: 0, x: -50 },
     visible: {
       opacity: 1,
@@ -21,7 +20,7 @@ function Hero() {
   };
 
   // Define animation variants for the main title for a bottom-right appearance.
-  const mainTitleVariants = {
+  const mainTitleVariants: Variants = {
     hidden: { opacity: 0, x: 50 }, // Starts hidden and 50px to the right.
     visible: {
       opacity: 1,

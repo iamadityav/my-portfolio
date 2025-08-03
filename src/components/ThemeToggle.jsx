@@ -3,7 +3,6 @@
 // It is still included for potential future use, even though the main sections
 // now have a fixed black/green theme.
 
-import React from 'react';
 
 // ThemeToggle component receives the current theme and the function to toggle it as props.
 function ThemeToggle({ theme, toggleTheme }) {
