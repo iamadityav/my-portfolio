@@ -1,12 +1,7 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
-  base: '/my-portfolio/', // ✅ This is the crucial fix for GitHub Pages
-  plugins: [
-    react(),
-    tailwindcss(),
-  ],
-});
+  plugins: [react()],
+  base: '/my-portfolio/',
+})
