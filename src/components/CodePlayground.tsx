@@ -3,7 +3,7 @@
 // It features a code editor on the left, an output console on the right,
 // and a "Run" button to execute the code.
 
-import React, { useState } from 'react'; // Import React and the useState hook for managing state.
+import { useState } from 'react'; // Import React and the useState hook for managing state.
 import { motion } from 'framer-motion'; // Import motion for animations.
 
 function CodePlayground() {
@@ -40,7 +40,7 @@ function CodePlayground() {
       func(); // Execute the user's code.
     } catch (error) {
       // If an error occurs, capture it and add it to the output.
-      capturedOutput += `Error: ${error.message}`;
+      capturedOutput += `Error: ${(error as Error).message}`;
     } finally {
       // Restore the original console.log function.
       console.log = originalConsoleLog;

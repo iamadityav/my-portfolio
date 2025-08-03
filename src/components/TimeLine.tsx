@@ -1,14 +1,13 @@
 // src/components/Timeline.jsx
 // Interactive timeline with animated car following a zigzag path through 15 milestone points
-import React, { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 
-function Timeline() {
+function TimeLine() {
   const accentColor = '#3abf00';
   const [currentPoint, setCurrentPoint] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const carControls = useAnimation();
-  const pathRef = useRef(null);
 
   // Timeline milestones data
   const milestones = [
@@ -251,4 +250,4 @@ function Timeline() {
   );
 }
 
-export default Timeline;
+export default TimeLine;

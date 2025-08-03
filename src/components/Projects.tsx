@@ -1,12 +1,13 @@
 // src/components/Projects.jsx
 // This component for the projects section is updated to use the consistent black/green theme and Fira Code font.
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 function Projects() {
   const accentColor = '#3abf00'; // Define the accent color.
-  const [hoveredProjectId, setHoveredProjectId] = useState(null);
+  const [hoveredProjectId, setHoveredProjectId] = useState<number | null>(null);
+
 
   // Mock data for the projects.
   const projects = [

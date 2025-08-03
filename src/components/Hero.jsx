@@ -1,6 +1,5 @@
 // src/components/Hero.jsx
 // This version correctly places the main title in the bottom-right corner.
-import React from 'react';
 import { motion } from 'framer-motion';
 
 function Hero() {

@@ -1,6 +1,5 @@
 // src/components/About.jsx
 // About section with resume download, LinkedIn, and GitHub links
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Download, Linkedin, Github, Code, Coffee, Zap } from 'lucide-react';
 
