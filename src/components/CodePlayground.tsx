@@ -11,7 +11,7 @@ function CodePlayground() {
   const accentColor = '#3abf00';
 
   // State to hold the code written by the user in the editor.
-  const [code, setCode] = useState('// Write your JavaScript code here\nconsole.log("Hello, World!");');
+  const [code, setCode] = useState('//Because every journey begins with a single log. console.log("💡 Innovation starts here.")');
   // State to hold the output from the executed code.
   const [output, setOutput] = useState('');
 
