@@ -1,85 +1,61 @@
 // src/App.tsx
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-
-// @ts-ignore: No type declaration for JSX file
+// @ts-ignore
 import Hero from './components/Hero';
-// Ensure this matches the actual filename **exactly**
 import TimeLine from './components/TimeLine';
+// @ts-ignore
+import Projects from './components/Projects';
+// @ts-ignore
+import CodePlayground from './components/CodePlayground';
 // @ts-ignore
 import About from './components/About';
 // @ts-ignore
-import CodePlayground from './components/CodePlayground';
-import type { Variants } from 'framer-motion';
+import { StatusBar, TabBar, Toast } from './components/PhoneChrome';
+// @ts-ignore
+import { PerfMonitor } from './components/PerfMonitor';
+
+// Soft electric-lime glows drifting behind everything (the canvas stays dark, but not flat)
+const blobs = [
+  { top: '-10%', left: '-10%', size: '60vw', dx: 60, dy: 40, a: 0.16 },
+  { top: '35%', left: '55%', size: '55vw', dx: -50, dy: 60, a: 0.12 },
+  { top: '70%', left: '-5%', size: '50vw', dx: 40, dy: -50, a: 0.10 },
+];
 
 function App() {
-  const [showNavbar, setShowNavbar] = useState(false);
-
-
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollThreshold = window.innerHeight;
-      setShowNavbar(window.scrollY > scrollThreshold);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToSection = (id: string) => {
-    const section = document.getElementById(id);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
+  const [toast, setToast] = useState('');
+  const timer = useRef<number>(0);
+  const notify = (msg: string) => {
+    setToast(msg);
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setToast(''), 2200);
   };
-
-const sectionRevealVariants: Variants = {
-  hidden: { opacity: 0, y: 100 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.8,
-      ease: [0.25, 0.1, 0.25, 1], // ✅ correct and typed
-    },
-  },
-};
 
   return (
     <div>
-      {showNavbar && (
-        <nav className="fixed top-0 left-0 right-0 bg-gray-900 text-white p-4 z-50 flex justify-center space-x-6 shadow-lg">
-          <button onClick={() => scrollToSection('hero')} className="text-lg font-medium hover:text-[#3abf00] transition-colors duration-300">
-            Home
-          </button>
-          <button onClick={() => scrollToSection('timeline')} className="text-lg font-medium hover:text-[#3abf00] transition-colors duration-300">
-            TimeLine
-          </button>
-          <button onClick={() => scrollToSection('code-playground')} className="text-lg font-medium hover:text-[#3abf00] transition-colors duration-300">
-            Code Playground
-          </button>
-          <button onClick={() => scrollToSection('about')} className="text-lg font-medium hover:text-[#3abf00] transition-colors duration-300">
-            About
-          </button>
-        </nav>
-      )}
-
-      <div id="hero">
-        <Hero />
+      <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
+        {blobs.map((b, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              top: b.top, left: b.left, width: b.size, height: b.size,
+              background: `radial-gradient(circle, rgba(58,191,0,${b.a}) 0%, transparent 65%)`,
+            }}
+            animate={{ x: [0, b.dx, 0], y: [0, b.dy, 0] }}
+            transition={{ duration: 18 + i * 4, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        ))}
       </div>
-
-      <motion.div id="timeline" variants={sectionRevealVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.4 }}>
-        <TimeLine />
-      </motion.div>
-
-      <motion.div id="code-playground" variants={sectionRevealVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.4 }}>
-        <CodePlayground />
-      </motion.div>
-
-      <motion.div id="about" variants={sectionRevealVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.4 }}>
-        <About />
-      </motion.div>
+      <StatusBar />
+      <PerfMonitor />
+      <Toast message={toast} />
+      <Hero />
+      <TimeLine />
+      <Projects />
+      <CodePlayground />
+      <About notify={notify} />
+      <TabBar />
     </div>
   );
 }

@@ -1,13 +1,12 @@
 /* src/index.css */
-/* This file contains global CSS styles and Tailwind directives. */
-
-/* Import Tailwind CSS. This is handled by the @tailwindcss/vite plugin. */
 @import "tailwindcss";
 
-/* Set the default font for the entire application to Fira Code. */
-/* Using 'monospace' as a fallback if the font is not available. */
+@theme {
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
 body {
-  font-family: 'Fira Code', monospace;
-  /* Add this line to prevent the white flash on scroll */
-  background-color: #000; 
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  background-color: #000;
 }

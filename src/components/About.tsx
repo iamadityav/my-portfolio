@@ -1,198 +1,243 @@
-// src/components/About.jsx
-// About section with resume download, LinkedIn, and GitHub links
-import { motion } from 'framer-motion';
-import { Download, Linkedin, Github, Code, Coffee, Zap } from 'lucide-react';
+// src/components/About.jsx: "Diagnostics & System Architecture" spec sheet + command hub
+import { useState, useEffect, useRef } from 'react';
+import { motion, animate, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { Download, Linkedin, Github, Mail } from 'lucide-react';
+import { profile } from '../data';
+import avatar from './avatar.png';
 
-function About() {
-  const accentColor = '#3abf00';
+const ACCENT = '#3abf00';
+const glass = 'rounded-2xl border bg-gray-950/60 backdrop-blur-md shadow-[0_0_30px_rgba(58,191,0,0.10)]';
+const edge = { borderColor: 'rgba(58,191,0,0.28)' };
 
-  // Handler for resume download
-  const handleResumeDownload = () => {
-    // Create a temporary link element to trigger download
-    // Replace 'resume.pdf' with your actual resume file path in the public folder
-    const link = document.createElement('a');
-    link.href = '/resume.pdf'; // Make sure to add your resume.pdf to the public folder
-    link.download = 'Aditya_Verma_Resume.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+const impact = [
+  { tag: 'PERFORMANCE', text: 'Led the Webpack to Re.Pack migration, cutting dev build times by ~40%.' },
+  { tag: 'SCALE', text: 'Scaled Motor Claims, Bike Insurance and My Policy to 30K+ monthly users at Digit Insurance.' },
+  { tag: 'AI INTEGRATION', text: 'Embedded OpenAI and Anthropic features, backed by a full growth analytics stack.' },
+  { tag: 'SHIPPING', text: 'Sole React Native developer: shipped CloudHire to the App Store and Play Store.' },
+];
+
+const stack = [
+  { cat: 'Runtime & Core', tags: ['React Native', 'TypeScript', 'JavaScript'],
+    ctx: 'Sole React Native developer on CloudHire (App Store + Play Store). Production RN at Digit Insurance since 2023.', pill: '2 production apps' },
+  { cat: 'State Management', tags: ['Zustand', 'Redux'],
+    ctx: "Zustand drives CloudHire's multi-step onboarding and application tracker.", flow: 'UI event > action > store > selector > UI' },
+  { cat: 'Build & Tooling', tags: ['Re.Pack', 'Xcode', 'Android Studio'],
+    ctx: 'Led the Webpack to Re.Pack migration at Digit and won the Tech Titan Award (2025).', pill: '~40% faster dev builds' },
+  { cat: 'AI & Backend', tags: ['Node.js', 'Firebase', 'PostgreSQL', 'OpenAI', 'Anthropic'],
+    ctx: 'OpenAI and Anthropic power AI resume generation and mock interviews. Node.js drives reminders, Firebase handles real-time sync.', pill: 'AI in production' },
+  { cat: 'Payments & Analytics', tags: ['Razorpay', 'Mixpanel', 'Meta App Events'],
+    ctx: 'Razorpay subscriptions (Blue and Elite plans) behind one paywall. Mixpanel, Meta App Events and Firebase analytics with referral deep linking.', pill: 'Subscriptions + growth' },
+];
+
+/* ---------- small helpers ---------- */
+function CountUp({ to, suffix = '' }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+  const [v, setV] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    const c = animate(0, to, { duration: 1.4, ease: 'easeOut', onUpdate: (l) => setV(Math.round(l)) });
+    return () => c.stop();
+  }, [inView, to]);
+  return <span ref={ref}>{v}{suffix}</span>;
+}
+
+function Gauge({ value, label }) {
+  return (
+    <div className="h-1.5 rounded-full bg-gray-800 overflow-hidden" role="img" aria-label={label}>
+      <motion.div className="h-full rounded-full" style={{ background: ACCENT, boxShadow: `0 0 8px ${ACCENT}` }}
+        initial={{ width: 0 }} whileInView={{ width: `${value}%` }} viewport={{ once: true }} transition={{ duration: 1.2, ease: 'easeOut' }} />
+    </div>
+  );
+}
+
+const Pill = ({ children }) => (
+  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border" style={{ borderColor: ACCENT, color: ACCENT }}>{children}</span>
+);
+
+/* ---------- tilting avatar ---------- */
+function AvatarCard() {
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const rx = useSpring(useTransform(my, [-0.5, 0.5], [14, -14]), { stiffness: 150, damping: 15 });
+  const ry = useSpring(useTransform(mx, [-0.5, 0.5], [-14, 14]), { stiffness: 150, damping: 15 });
+  const onMove = (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    mx.set((e.clientX - r.left) / r.width - 0.5);
+    my.set((e.clientY - r.top) / r.height - 0.5);
   };
+  return (
+    <div onMouseMove={onMove} onMouseLeave={() => { mx.set(0); my.set(0); }} className={`${glass} p-6 flex items-center gap-5`} style={edge}>
+      <motion.div style={{ rotateX: rx, rotateY: ry, transformPerspective: 600 }} className="relative w-28 h-28 shrink-0">
+        <motion.div className="absolute inset-0 rounded-full" animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+          style={{ background: `conic-gradient(from 0deg, ${ACCENT}, transparent 40%, ${ACCENT} 70%, transparent)`, filter: 'blur(1px)' }} />
+        <div className="absolute inset-[3px] rounded-full bg-black overflow-hidden" style={{ boxShadow: `0 0 30px ${ACCENT}55` }}>
+          <img src={avatar} alt={profile.name} className="w-full h-full object-cover" />
+        </div>
+      </motion.div>
+      <div>
+        <p className="font-display font-extrabold text-xl text-white">{profile.name}</p>
+        <p className="text-xs text-gray-400">{profile.role}</p>
+        <p className="text-xs mt-1" style={{ color: ACCENT }}>{profile.company}</p>
+      </div>
+    </div>
+  );
+}
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        staggerChildren: 0.2
-      }
-    }
-  };
+/* ---------- main ---------- */
+function About({ notify }) {
+  const [active, setActive] = useState(0);
+  const [meta, setMeta] = useState('PDF');
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 }
-    }
-  };
+  // Real file details for the resume button (size, last updated), when the file is served
+  useEffect(() => {
+    fetch(profile.resume, { method: 'HEAD' }).then((r) => {
+      if (!r.ok || !(r.headers.get('content-type') || '').includes('pdf')) return;
+      const size = r.headers.get('content-length');
+      const mod = r.headers.get('last-modified');
+      const parts = ['PDF'];
+      if (size) parts.push(`${Math.round(size / 1024)} KB`);
+      if (mod) parts.push('updated ' + new Date(mod).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }));
+      setMeta(parts.join(' / '));
+    }).catch(() => {});
+  }, []);
 
-  const buttonVariants = {
-    hover: { 
-      scale: 1.05,
-      boxShadow: `0 10px 25px ${accentColor}30`
-    },
-    tap: { scale: 0.95 }
+  const copyEmail = async () => {
+    try { await navigator.clipboard.writeText(profile.email); notify('Copied to clipboard! 📋'); }
+    catch { notify(profile.email); }
   };
+  const ctx = stack[active];
+  const key = 'flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-gray-700 bg-gray-900/70 hover:border-[#3abf00] transition-colors text-sm text-white';
+  const keycap = 'text-[11px] font-mono px-2 py-0.5 rounded border border-gray-600 text-gray-300';
 
   return (
-    <section id="about" className="min-h-screen bg-black text-white py-20 px-8 flex items-center">
-      <div className="container mx-auto max-w-6xl">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
-        >
-          {/* Left Side - About Content */}
-          <motion.div variants={itemVariants} className="space-y-6">
-            <motion.h2 
-              className="text-5xl font-bold mb-6"
-              style={{ color: accentColor }}
-            >
-              About Me
-            </motion.h2>
-            
-            <motion.div variants={itemVariants} className="space-y-4">
-              <p className="text-lg text-gray-300 leading-relaxed">
-                I'm a passionate <span style={{ color: accentColor }} className="font-semibold">Front-end Developer</span> and 
-                <span style={{ color: accentColor }} className="font-semibold"> Vibe Coder</span> who loves creating 
-                innovative digital experiences. My journey in programming started in 2020, and since then, 
-                I've been constantly evolving and learning new technologies.
-              </p>
-              
-              <p className="text-lg text-gray-300 leading-relaxed">
-                I specialize in building modern web applications using React, React Native, and TypeScript. 
-                I'm particularly interested in AI integration, performance optimization, and creating 
-                user-centric solutions that make a difference.
-              </p>
-              
-              <p className="text-lg text-gray-300 leading-relaxed">
-                When I'm not coding, you'll find me exploring new technologies, contributing to open-source 
-                projects, or sharing knowledge with the developer community.
-              </p>
+    <section id="about" className="relative min-h-screen py-20 px-4 sm:px-8 text-white overflow-hidden">
+      <div className="absolute -top-20 right-0 w-[60vw] h-[60vw] pointer-events-none" aria-hidden="true"
+        style={{ background: 'radial-gradient(circle, rgba(58,191,0,0.14), transparent 65%)' }} />
+
+      <div className="relative mx-auto max-w-7xl grid lg:grid-cols-[1.25fr_1fr] gap-8">
+        {/* ---------- left: narrative + dependency matrix ---------- */}
+        <div>
+          <p className="font-mono text-xs sm:text-sm tracking-wide mb-4" style={{ color: ACCENT }}>// DIAGNOSTICS & SYSTEM ARCHITECTURE</p>
+          <h2 className="font-display font-extrabold text-3xl sm:text-4xl leading-tight mb-8 text-white">
+            Hey, I'm Aditya. I build end-to-end mobile architectures, from JS engines to App Store deployments.
+          </h2>
+
+          <div className="grid sm:grid-cols-2 gap-3 mb-8">
+            {impact.map((c, i) => (
+              <motion.div key={c.tag} initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className={`${glass} p-4`} style={edge}>
+                <Pill>{c.tag}</Pill>
+                <p className="mt-3 text-sm text-gray-300">{c.text}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className={`${glass} p-4`} style={edge}>
+            <p className="font-mono text-[11px] text-gray-500 mb-3">PACKAGE DEPENDENCY MATRIX (hover or tap a category)</p>
+            <div className="divide-y divide-gray-800">
+              {stack.map((row, i) => (
+                <button key={row.cat} onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} onClick={() => setActive(i)}
+                  className="w-full text-left py-3 grid sm:grid-cols-[150px_1fr] gap-2 items-start">
+                  <span className="text-xs font-mono" style={{ color: active === i ? ACCENT : '#9ca3af' }}>{row.cat}</span>
+                  <span className="flex flex-wrap gap-1.5">
+                    {row.tags.map((t) => (
+                      <span key={t} className="text-[11px] px-2 py-0.5 rounded-md border transition-colors"
+                        style={active === i ? { borderColor: ACCENT, color: ACCENT, background: 'rgba(58,191,0,0.08)' } : { borderColor: '#374151', color: '#d1d5db' }}>
+                        {t}
+                      </span>
+                    ))}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <motion.div key={active} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="mt-3 rounded-xl bg-black/50 border border-gray-800 p-3 text-xs text-gray-300">
+              <p>{ctx.ctx}</p>
+              {ctx.flow && <p className="mt-2 font-mono" style={{ color: ACCENT }}>{ctx.flow}</p>}
+              {ctx.pill && <div className="mt-2"><Pill>{ctx.pill}</Pill></div>}
             </motion.div>
+          </div>
+        </div>
 
-            {/* Skills/Interests */}
-            <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-              <div className="flex items-center space-x-3 p-4 bg-gray-900 rounded-lg">
-                <Code size={24} style={{ color: accentColor }} />
-                <span className="text-sm font-medium">Clean Code</span>
-              </div>
-              <div className="flex items-center space-x-3 p-4 bg-gray-900 rounded-lg">
-                <Zap size={24} style={{ color: accentColor }} />
-                <span className="text-sm font-medium">Performance</span>
-              </div>
-              <div className="flex items-center space-x-3 p-4 bg-gray-900 rounded-lg">
-                <Coffee size={24} style={{ color: accentColor }} />
-                <span className="text-sm font-medium">Innovation</span>
-              </div>
-            </motion.div>
-          </motion.div>
+        {/* ---------- right: avatar, metrics, command hub ---------- */}
+        <div className="space-y-4">
+          <AvatarCard />
 
-          {/* Right Side - Profile & Actions */}
-          <motion.div variants={itemVariants} className="text-center lg:text-left">
-            {/* Profile Image Placeholder */}
-            <motion.div 
-              className="w-64 h-64 mx-auto lg:mx-0 mb-8 bg-gray-900 rounded-full flex items-center justify-center border-4 overflow-hidden"
-              style={{ borderColor: accentColor }}
-              whileHover={{ 
-                boxShadow: `0 0 30px ${accentColor}50`,
-                scale: 1.02 
-              }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Replace this with your actual profile image */}
-              <img 
-                // src="https://placehold.co/256x256/3abf00/000000?text=AV&font=source-code-pro" 
-                src="/src/components/avatar.png"
-                alt="Aditya Verma"
-                className="w-full h-full object-cover rounded-full"
-              />
-            </motion.div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className={`${glass} p-4`} style={edge}>
+              <div className="text-3xl font-display font-extrabold" style={{ color: ACCENT }}><CountUp to={3} suffix="+" /></div>
+              <p className="text-xs text-gray-400 mb-3">Years shipping RN</p>
+              <Gauge value={70} label="Years of experience" />
+              <div className="flex gap-1.5 mt-3"><Pill>iOS</Pill><Pill>Android</Pill></div>
+            </div>
 
-            {/* Action Buttons */}
-            <motion.div variants={itemVariants} className="space-y-4">
-              {/* Resume Download Button */}
-              <motion.button
-                onClick={handleResumeDownload}
-                className="w-full flex items-center justify-center space-x-3 px-6 py-4 rounded-lg font-semibold text-black transition-all duration-300"
-                style={{ backgroundColor: accentColor }}
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                <Download size={20} />
-                <span>Download Resume</span>
-              </motion.button>
+            <div className={`${glass} p-4`} style={edge}>
+              <div className="text-3xl font-display font-extrabold" style={{ color: ACCENT }}><CountUp to={30} suffix="K+" /></div>
+              <p className="text-xs text-gray-400 mb-3">Monthly users at Digit</p>
+              <Gauge value={85} label="Monthly users" />
+              <div className="flex items-center gap-2 mt-3 text-[10px] font-mono text-gray-300">
+                <span className="relative flex w-2 h-2">
+                  <span className="absolute inline-flex w-full h-full rounded-full animate-ping" style={{ background: ACCENT, opacity: 0.6 }} />
+                  <span className="relative inline-flex w-2 h-2 rounded-full" style={{ background: ACCENT }} />
+                </span>
+                STABLE PRODUCTION
+              </div>
+            </div>
 
-              {/* Social Links */}
-              <div className="grid grid-cols-2 gap-4">
-                {/* LinkedIn Button */}
-                <motion.a
-                  href="https://linkedin.com/in/your-profile" // Replace with your LinkedIn URL
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center space-x-2 px-6 py-4 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition-all duration-300"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  <Linkedin size={20} style={{ color: accentColor }} />
-                  <span>LinkedIn</span>
-                </motion.a>
+            <div className={`${glass} p-4`} style={edge}>
+              <div className="text-3xl font-display font-extrabold" style={{ color: ACCENT }}>~<CountUp to={40} suffix="%" /></div>
+              <p className="text-xs text-gray-400 mb-3">Faster builds</p>
+              <div className="space-y-1.5 text-[10px] font-mono text-gray-400">
+                <div>Webpack<Gauge value={100} label="Webpack relative build time" /></div>
+                <div>Re.Pack<Gauge value={60} label="Re.Pack relative build time" /></div>
+              </div>
+              <p className="text-[10px] text-gray-600 mt-2">relative dev build time</p>
+            </div>
 
-                {/* GitHub Button */}
-                <motion.a
-                  href="https://github.com/your-username" // Replace with your GitHub URL
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center space-x-2 px-6 py-4 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition-all duration-300"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  <Github size={20} style={{ color: accentColor }} />
-                  <span>GitHub</span>
-                </motion.a>
-              </div>
-            </motion.div>
+            <div className={`${glass} p-4`} style={edge}>
+              <div className="text-3xl font-display font-extrabold" style={{ color: ACCENT }}><CountUp to={250} suffix="+" /></div>
+              <p className="text-xs text-gray-400 mb-3">LeetCode solved</p>
+              <Gauge value={80} label="Problems solved" />
+              <div className="flex gap-1.5 mt-3"><Pill>2020 to 2023</Pill></div>
+            </div>
+          </div>
 
-            {/* Quick Stats */}
-            <motion.div 
-              variants={itemVariants}
-              className="mt-8 grid grid-cols-3 gap-4 text-center"
-            >
-              <div className="p-4 bg-gray-900 rounded-lg">
-                <div className="text-2xl font-bold" style={{ color: accentColor }}>5+</div>
-                <div className="text-sm text-gray-400">Years Coding</div>
-              </div>
-              <div className="p-4 bg-gray-900 rounded-lg">
-                <div className="text-2xl font-bold" style={{ color: accentColor }}>50+</div>
-                <div className="text-sm text-gray-400">Projects</div>
-              </div>
-              <div className="p-4 bg-gray-900 rounded-lg">
-                <div className="text-2xl font-bold" style={{ color: accentColor }}>∞</div>
-                <div className="text-sm text-gray-400">Coffee Cups</div>
-              </div>
-            </motion.div>
-          </motion.div>
-        </motion.div>
+          {/* command hub */}
+          <div className={`${glass} p-4 space-y-3`} style={edge}>
+            <p className="font-mono text-[11px] text-gray-500">COMMAND HUB</p>
+            <motion.a href={profile.resume} download="Aditya_Verma_Resume.pdf" onClick={() => notify('Resume downloading')}
+              initial="rest" whileHover="hover" whileTap={{ scale: 0.98 }}
+              variants={{ rest: { boxShadow: `0 0 0 0 ${ACCENT}00` }, hover: { boxShadow: `0 0 28px ${ACCENT}aa` } }}
+              className="flex items-center justify-between gap-3 px-5 py-4 rounded-xl font-semibold text-black" style={{ background: ACCENT }}>
+              <span className="flex items-center gap-3">
+                <motion.span variants={{ rest: { y: 0 }, hover: { y: [0, 3, 0], transition: { repeat: Infinity, duration: 0.8 } } }}><Download size={20} /></motion.span>
+                Download Resume
+              </span>
+              <span className="text-[10px] font-mono font-normal">{meta}</span>
+            </motion.a>
+
+            <button onClick={copyEmail} className={`${key} w-full`}>
+              <span className="flex items-center gap-3"><Mail size={18} style={{ color: ACCENT }} /> Copy email</span>
+              <span className="text-xs text-gray-500">{profile.email}</span>
+            </button>
+
+            <div className="grid grid-cols-2 gap-3">
+              <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className={key}>
+                <span className="flex items-center gap-2"><Linkedin size={18} style={{ color: ACCENT }} /> LinkedIn</span>
+                <span className={keycap}>⌘ + IN</span>
+              </a>
+              <a href={profile.github} target="_blank" rel="noopener noreferrer" className={key}>
+                <span className="flex items-center gap-2"><Github size={18} style={{ color: ACCENT }} /> GitHub</span>
+                <span className={keycap}>⌘ + GH</span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <p className="relative mt-16 text-center text-[11px] font-mono text-gray-600">
+        © 2026 Aditya Verma / built with React, Tailwind and Framer Motion
+      </p>
     </section>
   );
 }
