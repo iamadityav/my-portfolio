@@ -10,15 +10,15 @@ const glass = 'rounded-2xl border bg-gray-950/60 backdrop-blur-md shadow-[0_0_30
 const edge = { borderColor: 'rgba(58,191,0,0.28)' };
 
 const impact = [
-  { tag: 'PERFORMANCE', text: 'Led the Webpack to Re.Pack migration, cutting dev build times by ~40%.' },
-  { tag: 'SCALE', text: 'Scaled Motor Claims, Bike Insurance and My Policy to 30K+ monthly users at Digit Insurance.' },
-  { tag: 'AI INTEGRATION', text: 'Embedded OpenAI and Anthropic features, backed by a full growth analytics stack.' },
-  { tag: 'SHIPPING', text: 'Sole React Native developer: shipped CloudHire to the App Store and Play Store.' },
+  { tag: 'PERFORMANCE', text: 'Led the Webpack to Re.Pack migration at Digit: dev builds ~40% faster, higher CI/CD throughput, Tech Titan Award (2025).' },
+  { tag: 'SCALE', text: 'Shipped Motor Claims, Bike Insurance and My Policy, used by 30K+ customers every month.' },
+  { tag: 'AI & MONETIZATION', text: 'Launched AI resume generation and mock interviews (OpenAI, Anthropic) with Razorpay subscriptions at CloudHire.' },
+  { tag: 'FREELANCE', text: 'Open to freelance projects: end-to-end React Native apps, AI features, payments, analytics and performance work.' },
 ];
 
 const stack = [
   { cat: 'Runtime & Core', tags: ['React Native', 'TypeScript', 'JavaScript'],
-    ctx: 'Sole React Native developer on CloudHire (App Store + Play Store). Production RN at Digit Insurance since 2023.', pill: '2 production apps' },
+    ctx: 'Sole React Native engineer on CloudHire (App Store + Play Store). Production React Native at Digit Insurance for 2.5+ years.', pill: '2 production apps' },
   { cat: 'State Management', tags: ['Zustand', 'Redux'],
     ctx: "Zustand drives CloudHire's multi-step onboarding and application tracker.", flow: 'UI event > action > store > selector > UI' },
   { cat: 'Build & Tooling', tags: ['Re.Pack', 'Xcode', 'Android Studio'],
@@ -120,7 +120,7 @@ function About({ notify }) {
         <div>
           <p className="font-mono text-xs sm:text-sm tracking-wide mb-4" style={{ color: ACCENT }}>// DIAGNOSTICS & SYSTEM ARCHITECTURE</p>
           <h2 className="font-display font-extrabold text-3xl sm:text-4xl leading-tight mb-8 text-white">
-            Hey, I'm Aditya. I build end-to-end mobile architectures, from JS engines to App Store deployments.
+            I'm Aditya, a React Native engineer who takes mobile products from architecture to the App Store and Play Store. Open to freelance work.
           </h2>
 
           <div className="grid sm:grid-cols-2 gap-3 mb-8">
@@ -134,7 +134,7 @@ function About({ notify }) {
           </div>
 
           <div className={`${glass} p-4`} style={edge}>
-            <p className="font-mono text-[11px] text-gray-500 mb-3">PACKAGE DEPENDENCY MATRIX (hover or tap a category)</p>
+            <p className="font-mono text-[11px] text-gray-500 mb-3">TECH STACK (hover or tap a category)</p>
             <div className="divide-y divide-gray-800">
               {stack.map((row, i) => (
                 <button key={row.cat} onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} onClick={() => setActive(i)}
@@ -195,16 +195,16 @@ function About({ notify }) {
             </div>
 
             <div className={`${glass} p-4`} style={edge}>
-              <div className="text-3xl font-display font-extrabold" style={{ color: ACCENT }}><CountUp to={250} suffix="+" /></div>
-              <p className="text-xs text-gray-400 mb-3">LeetCode solved</p>
-              <Gauge value={80} label="Problems solved" />
-              <div className="flex gap-1.5 mt-3"><Pill>2020 to 2023</Pill></div>
+              <div className="text-3xl font-display font-extrabold" style={{ color: ACCENT }}>~<CountUp to={30} suffix="%" /></div>
+              <p className="text-xs text-gray-400 mb-3">Fewer recurring prod issues</p>
+              <Gauge value={70} label="Recurring production issues reduced" />
+              <div className="flex gap-1.5 mt-3"><Pill>Digit Insurance</Pill></div>
             </div>
           </div>
 
           {/* command hub */}
           <div className={`${glass} p-4 space-y-3`} style={edge}>
-            <p className="font-mono text-[11px] text-gray-500">COMMAND HUB</p>
+            <p className="font-mono text-[11px] text-gray-500">COMMAND HUB / OPEN TO FREELANCE PROJECTS</p>
             <motion.a href={profile.resume} download="Aditya_Verma_Resume.pdf" onClick={() => notify('Resume downloading')}
               initial="rest" whileHover="hover" whileTap={{ scale: 0.98 }}
               variants={{ rest: { boxShadow: `0 0 0 0 ${ACCENT}00` }, hover: { boxShadow: `0 0 28px ${ACCENT}aa` } }}

@@ -169,14 +169,14 @@ function Phone() {
 
 /* ---------- Left canvas ---------- */
 const SNIPPETS = {
-  'Reanimated 3': 'const x = useSharedValue(0);\nconst style = useAnimatedStyle(() => ({\n  transform: [{ translateX: x.value }],\n}));\nx.value = withSpring(120);',
-  'Fabric Renderer': '// New Architecture\n// Fabric commits the UI tree synchronously\n// and JSI calls native without the JSON bridge.',
-  'Re.Pack': '// Webpack -> Re.Pack migration at Digit\n// dev build times down ~40%',
+  'Zustand': 'const useOnboarding = create((set) => ({\n  step: 0,\n  next: () => set((s) => ({ step: s.step + 1 })),\n}));\n// one store drives onboarding and the application tracker',
+  'Re.Pack': '// Webpack -> Callstack Re.Pack at Digit\n// dev build times down ~40%, higher CI/CD throughput',
+  'Auto Apply': '// CloudHire Auto Apply\n// LinkedIn OTP login > 2FA handling > session\n// Unipile inbox sync: Gmail, Outlook, Yahoo',
 };
 
 function Hero() {
   const fps = useFps();
-  const [open, setOpen] = useState('Reanimated 3');
+  const [open, setOpen] = useState('Zustand');
   const badge = 'px-2.5 py-1 rounded-full border text-[11px] font-mono';
 
   return (
@@ -187,7 +187,7 @@ function Hero() {
           <div className="flex flex-wrap gap-2 mb-6">
             <span className={badge} style={{ borderColor: ACCENT }}><span className="animate-pulse">●</span> LIVE ON APP STORE</span>
             <span className={badge} style={{ borderColor: '#374151' }}>FPS: {fps}</span>
-            <span className={badge} style={{ borderColor: '#374151' }}>BRIDGE: JSI / TURBOMODULES</span>
+            <span className={badge} style={{ borderColor: '#374151' }}>OPEN FOR FREELANCE</span>
           </div>
 
           <p className="font-mono text-sm text-gray-400 mb-3">{profile.role} / {profile.company}</p>
@@ -196,7 +196,7 @@ function Hero() {
           </h1>
 
           <p className="mt-6 text-sm text-gray-400 max-w-md">
-            I ship React Native apps end to end. Tap a concept to see it:
+            I design, build and ship production React Native apps, from architecture to the App Store and Play Store. Open to freelance projects. Tap a concept to see how I work:
           </p>
           <div className="flex flex-wrap gap-2 mt-3">
             {Object.keys(SNIPPETS).map((k) => (

@@ -28,9 +28,9 @@ function Projects() {
   return (
     <section id="projects" className="relative min-h-screen py-20 px-4 sm:px-8 text-white">
       <div className="mx-auto max-w-4xl">
-        <p className="font-mono text-xs sm:text-sm tracking-wide mb-2 text-center" style={{ color: ACCENT }}>// APP SPRINGBOARD</p>
-        <h2 className="font-display font-extrabold text-4xl text-center mb-2" style={{ color: ACCENT }}>Apps</h2>
-        <p className="text-gray-400 text-sm text-center mb-10">Tap an app to inspect its architecture.</p>
+        <p className="font-mono text-xs sm:text-sm tracking-wide mb-2 text-center" style={{ color: ACCENT }}>// CASE STUDIES</p>
+        <h2 className="font-display font-extrabold text-4xl text-center mb-2" style={{ color: ACCENT }}>Selected Work</h2>
+        <p className="text-gray-400 text-sm text-center mb-10">Tap a project to see what I built and the impact.</p>
 
         {/* springboard */}
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-8 mb-8">
@@ -83,7 +83,7 @@ function Projects() {
             </div>
 
             {/* B. architectural summary */}
-            <p className="font-mono text-[11px] text-gray-500 mt-6 mb-2">ARCHITECTURE & RESPONSIBILITIES</p>
+            <p className="font-mono text-[11px] text-gray-500 mt-6 mb-2">WHAT I BUILT</p>
             <ul className="space-y-2 text-sm text-gray-300">
               {project.points.map((pt) => (
                 <li key={pt} className="flex gap-2"><span style={{ color: ACCENT }}>&gt;</span><span>{pt}</span></li>
@@ -91,7 +91,7 @@ function Projects() {
             </ul>
 
             {/* C. stack + actions */}
-            <p className="font-mono text-[11px] text-gray-500 mt-6 mb-2">DEPENDENCIES</p>
+            <p className="font-mono text-[11px] text-gray-500 mt-6 mb-2">STACK</p>
             <div className="flex flex-wrap gap-2">
               {project.stack.map((s) => (
                 <span key={s} className="text-xs px-2.5 py-1 rounded-md border" style={{ borderColor: ACCENT, color: ACCENT, background: 'rgba(58,191,0,0.08)' }}>{s}</span>
